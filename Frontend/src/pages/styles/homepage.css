@@ -1,0 +1,116 @@
+
+
+#heading {
+    width:100%;
+    height:50vh;
+    background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+}
+#heading h1 {
+   margin: 10px;
+   font-size:48px;
+}
+#heading p {
+    font-size:28px;
+    margin: 20px 30px 30px 30px;
+    width:62%;
+}
+.login-options {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:30px;
+    position:relative;
+    top:-3.2em;
+}
+.login-card {
+    display:flex;
+    flex-direction:column;
+    background:white;
+    border-radius:10px;
+    padding:32px;
+    width:438px;
+    height:284px;
+    box-shadow:0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    text-align:center;
+}
+.login-card:hover {
+   transform:translateY(-10px);
+   box-shadow:0 8px 15px rgba(0,0,0,0.1);
+}
+.login-card-icon {
+    width:80px;
+    height:80px;
+    margin: 0 auto 1.5em;
+    border-radius:50%;
+    background-color: rgba(67, 97, 238, 0.1);
+    color:#4361ee;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:2.5em;
+    margin-bottom:10px;
+}
+.login-card h3 {
+    font-size:28px;
+    margin:10px 0px;
+}
+.login-card p {
+    font-size:18px;
+    color:#666;
+}
+.login-card a {
+    display:block;
+    width:170px;
+    margin:0px 10px;
+    position:relative;
+    left:25%;
+    color:white;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    background-color:#4361ee;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.login-card a:hover{
+  background-color:#3f37c9;
+}
+@media (min-width:1920px) {
+    #heading h1 {
+        font-size:66px;
+    }
+    #heading p {
+        font-size:36px;
+    }
+}
+@media (min-width:1440px) {
+    #heading h1  {
+        font-size:56px;
+    }
+}
+@media (max-width:768px) {
+    #heading h1  {
+        font-size:36px;
+    }
+    #heading p {
+       font-size:18px;
+    }
+    .login-options {
+       flex-direction:column;
+    }
+}
+@media (max-width:480px) {
+    .login-card {
+        width:92%;
+        padding:10px;
+    }
+}
