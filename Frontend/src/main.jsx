@@ -5,6 +5,8 @@ import App from './App.jsx'
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
+import { AuthProvider } from './context/AuthContext.jsx';
+
 import Homepage from './pages/homepage.jsx';
 import Login from './pages/login.jsx';
 import Portal from './pages/portal.jsx';
@@ -61,6 +63,8 @@ const router=createBrowserRouter([
 ]);
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>,
 );

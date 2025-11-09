@@ -1,6 +1,15 @@
 import '../pages/styles/sidebar.css';
-import {Link} from 'react-router-dom';
+import {Link,useNavigate} from 'react-router-dom';
+import { useAuth } from '../context/AuthContext.jsx';
 function SideBar({role}) {
+    const { logout } = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = async (e) => {
+      e.preventDefault();
+      await logout();
+      navigate('/'); // Navigate to homepage after logout
+    };
     function Role() {
       if(role==="Admin") {
           return (
@@ -30,10 +39,10 @@ function SideBar({role}) {
               </Link>
             </li>
             <li>
-              <Link to="/">
+              <a href="/" onClick={handleLogout}>
                 <i class="bx bx-log-out"></i>
                 <span>Logout</span>
-              </Link>
+              </a>
             </li>
           </ul>
          </div>
@@ -50,19 +59,19 @@ function SideBar({role}) {
           <div class="sidebar-menu">
           <ul>
             <li>
-              <a href="/study_materials" class="active">
+              <Link to="/study_materials" class="active">
                 <i class="bx bx-user"></i>
                 <span>Study Materials</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/courses">
+              <Link to="/courses">
                 <i class="bx bx-book-alt"></i>
                 <span>Courses</span>
-              </a>
+              </Link>
             </li>
-            <li>
-              <a href="/">
+           <li>
+              <a href="/" onClick={handleLogout}>
                 <i class="bx bx-log-out"></i>
                 <span>Logout</span>
               </a>
@@ -82,19 +91,19 @@ function SideBar({role}) {
           <div class="sidebar-menu">
           <ul>
             <li>
-              <a href="/upload_materials" class="active">
+              <Link to="/upload_materials" class="active">
                 <i class="bx bx-user"></i>
                 <span>Upload Materials</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/teacher_courses">
+              <Link to="/teacher_courses">
                 <i class="bx bx-book-alt"></i>
                 <span>Courses</span>
-              </a>
+              </Link>
             </li>
-            <li>
-              <a href="/">
+           <li>
+              <a href="/" onClick={handleLogout}>
                 <i class="bx bx-log-out"></i>
                 <span>Logout</span>
               </a>

@@ -9,16 +9,21 @@ import { fileURLToPath } from "url";
 import { sendWelcomeEmail, sendReport } from "./Services/emailService.js";
 import csv from "csv-parser";
 import csv_writer from "csv-writer";
+import jwt from 'jsonwebtoken';
+import cookieParser from 'cookie-parser';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const port = 5000;
 
+import authMiddleware from "./middlewares/authMiddleware.js";
 const createCsvWriter = csv_writer.createObjectCsvWriter;
 const corsOptions = {
   origin: "http://localhost:5173",
+  credentials: true,//Allows cookies
 };
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(cookieParser());
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -44,28 +49,192 @@ const uploadCSV = multer({
   },
 });
 
+const verifyAdmin = (req, res, next) => {
+  if (req.user.role !== 'Admin') {
+    return res.status(403).json({ message: 'Forbidden: Admin access only' });
+  }
+  next();
+};
+
+const handleLogin = async (res, user, role) => {
+  try {
+    const userId = user.id;
+
+    // 1. Create Access Token (short-lived)
+    const accessToken = jwt.sign(
+      { user: { id: userId, role: role } },
+      process.env.JWT_ACCESS_SECRET,
+      { expiresIn: '10m' } // Expires in 10 minutes
+    );
+
+    // 2. Create Refresh Token (long-lived)
+    const refreshToken = jwt.sign(
+      { user: { id: userId, role: role } },
+      process.env.JWT_REFRESH_SECRET,
+      { expiresIn: '7d' } // Expires in 7 days
+    );
+
+    // 3. Save the Refresh Token to the database (to allow revocation)
+    await db.query(
+      "INSERT INTO refresh_tokens (token, user_id, role) VALUES ($1, $2, $3)",
+      [refreshToken, userId, role]
+    );
+
+    // 4. Send the Refresh Token as a secure, HttpOnly cookie
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true, // Prevents JS from accessing it
+      secure: process.env.NODE_ENV === 'production', // Only send over HTTPS
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days (in milliseconds)
+      path: '/' // Make it accessible on all paths
+    });
+
+    // 5. Send the Access Token and user info in the response body
+    res.status(200).json({ success: true, accessToken, user });
+  } catch (err) {
+    console.error("Login handler error: ", err);
+    res.status(500).json({ msg: "Server error during login", success: false });
+  }
+};
+
 app.post("/Admin", async (req, res) => {
   try {
     let { userID, password } = req.body;
-    let text = `SELECT Admin_ID from Site_Admin where Admin_ID= $1`;
+    let text = `SELECT Admin_ID, Admin_Password from Site_Admin where Admin_ID = $1`;
     let params = [userID];
-    let existingAdmin = await db.query(text, params);
-    if (existingAdmin.rows.length === 0) {
-      return res.status(400).json({ success: false });
-    }
-    text = `SELECT Admin_Password from Site_Admin where Admin_ID= $1`;
     let result = await db.query(text, params);
-    const isMatch = await bcrypt.compare(
-      password,
-      result.rows[0].admin_password
-    );
-    if (!isMatch) {
-      return res.status(400).json({ success: false });
+
+    if (result.rows.length === 0) {
+      return res.status(401).json({ success: false, message: "Invalid credentials" });
     }
-    res.status(200).json({ success: true });
+
+    const user = result.rows[0];
+    const isMatch = await bcrypt.compare(password, user.admin_password);
+
+    if (!isMatch) {
+      return res.status(401).json({ success: false, message: "Invalid credentials" });
+    }
+    
+    const userData = { id: user.admin_id, name: "Admin" };
+    await handleLogin(res, userData, "Admin");
+
   } catch (err) {
     res.status(500).json({ msg: "Server error", success: false });
     console.error(err);
+  }
+});
+
+
+app.post("/Student", async (req, res) => {
+  try {
+    const { userID, password } = req.body;
+    const text = `SELECT Student_ID, Student_First_Name, Student_Password FROM Student WHERE Student_ID = $1`;
+    const result = await db.query(text, [userID]);
+
+    if (result.rows.length === 0) {
+      return res.status(401).json({ success: false, message: "Invalid credentials" });
+    }
+
+    const user = result.rows[0];
+    const isMatch = await bcrypt.compare(password, user.student_password);
+
+    if (!isMatch) {
+      return res.status(401).json({ success: false, message: "Invalid credentials" });
+    }
+    
+    const userData = { id: user.student_id, name: user.student_first_name };
+    await handleLogin(res, userData, "Student");
+
+  } catch (err) {
+    res.status(500).json({ msg: "Server error", success: false });
+    console.error(err);
+  }
+});
+
+app.post("/Teacher", async (req, res) => {
+  try {
+    const { userID, password } = req.body;
+    const text = `SELECT Teacher_ID, Teacher_First_Name, Teacher_Password FROM Teacher WHERE Teacher_ID = $1`;
+    const result = await db.query(text, [userID]);
+
+    if (result.rows.length === 0) {
+      return res.status(401).json({ success: false, message: "Invalid credentials" });
+    }
+
+    const user = result.rows[0];
+    const isMatch = await bcrypt.compare(password, user.teacher_password); 
+
+    if (!isMatch) {
+      return res.status(401).json({ success: false, message: "Invalid credentials" });
+    }
+    
+    const userData = { id: user.teacher_id, name: user.teacher_first_name };
+    await handleLogin(res, userData, "Teacher");
+
+  } catch (err) {
+    res.status(500).json({ msg: "Server error", success: false });
+    console.error(err);
+  }
+});
+
+// --- refresh ROUTE ---
+// This route is used to get a new access token when the old one expires
+app.post('/refresh', async (req, res) => {
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) {
+    return res.status(401).json({ success: false, message: "No refresh token" });
+  }
+
+  // Check if token is in our database
+  const { rows } = await db.query("SELECT * FROM refresh_tokens WHERE token = $1", [refreshToken]);
+  if (rows.length === 0) {
+    return res.status(403).json({ success: false, message: "Refresh token not found (revoked)" });
+  }
+
+  try {
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+    
+    const user = { id: decoded.user.id, role: decoded.user.role };
+
+    // Issue a new access token
+    const accessToken = jwt.sign(
+      { user },
+      process.env.JWT_ACCESS_SECRET,
+      { expiresIn: '10m' }
+    );
+    
+    // You also need user data
+    // This is simplified; you'd re-fetch user data here
+    const userData = { id: user.id, name: "User" }; 
+    
+    res.json({ success: true, accessToken, user: userData });
+  } catch (err) {
+    return res.status(403).json({ success: false, message: "Invalid refresh token" });
+  }
+});
+
+// --- Logout ROUTE (The Revoke Mechanism) ---
+app.post('/logout', async (req, res) => {
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) {
+    // No token, so we're already logged out
+    return res.status(204).send(); // 204 No Content
+  }
+
+  try {
+    // 1. Delete the token from the database
+    await db.query("DELETE FROM refresh_tokens WHERE token = $1", [refreshToken]);
+
+    // 2. Clear the cookie from the browser
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      path: '/'
+    });
+
+    res.status(200).json({ success: true, message: "Logged out successfully" });
+  } catch (err) {
+    console.error("Logout error:", err);
+    res.status(500).json({ success: false, message: "Server error during logout" });
   }
 });
 
@@ -353,16 +522,16 @@ async function processCreationRequests(filePath, adminEmail, action) {
       finalErrorFilePath
     );
   }
-  fs.unlink(dir,(err)=>{
+  fs.unlink(filePath,(err)=>{
       if(err) {
-        console.log("Error in deleting files");
+        console.log("Error in deleting files",filePath);
       }
       else {
         console.log("File Deleted Successfully");
       }
   })
 }
-app.post("/create_student_account",uploadCSV.single("create_student"),async (req, res) => {
+app.post("/create_student_account",authMiddleware,verifyAdmin,uploadCSV.single("create_student"),async (req, res) => {
     try {
       console.log(req.body);
       if (req.errorMessage) {
@@ -388,7 +557,7 @@ app.post("/create_student_account",uploadCSV.single("create_student"),async (req
   }
 );
 
-app.post("/create_teacher_account",uploadCSV.single("create_teacher"),async (req, res) => {
+app.post("/create_teacher_account",authMiddleware,verifyAdmin,uploadCSV.single("create_teacher"),async (req, res) => {
     try {
       console.log(req.body);
       if (req.errorMessage) {
@@ -414,7 +583,7 @@ app.post("/create_teacher_account",uploadCSV.single("create_teacher"),async (req
   }
 );
 
-app.post("/create_courses",uploadCSV.single("create_course"),async (req, res) => {
+app.post("/create_courses",authMiddleware,verifyAdmin,uploadCSV.single("create_course"),async (req, res) => {
     try {
       console.log(req.body);
       if (req.errorMessage) {
@@ -440,7 +609,7 @@ app.post("/create_courses",uploadCSV.single("create_course"),async (req, res) =>
   }
 );
 
-app.post("/assign_courses",uploadCSV.single("assign_course"),async (req, res) => {
+app.post("/assign_courses",authMiddleware,verifyAdmin,uploadCSV.single("assign_course"),async (req, res) => {
     try {
       console.log(req.body);
       if (req.errorMessage) {

@@ -1,60 +1,48 @@
 import {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
-import './styles/login.css';
+import './styles/login.css'; 
+import { useAuth } from '../context/AuthContext.jsx';
 
 function Login({role}) {
    const [userID,setUserID]=useState('');
    const [password,setPassword]=useState('');
    const [valid,setValid]=useState(true);
    const navigate = useNavigate();
+   const { login } = useAuth();
 
    async function handleSubmit(event) {
        event.preventDefault();
        
+       let url = '';
+       let targetPath = '';
+       if (role === "Admin") {
+         url = "http://localhost:5000/Admin";
+         targetPath = "/Admin";
+       } else if (role === "Student") {
+         url = "http://localhost:5000/Student";
+         targetPath = "/Student";
+       } else {
+         url = "http://localhost:5000/Teacher";
+         targetPath = "/Teacher";
+       }
+
       try {
-         if(role==="Admin") {
-             const response = await fetch("http://localhost:5000/Admin", {
-             method: 'POST',
-             headers: { 'Content-Type': 'application/json' },
-             body: JSON.stringify({ userID, password }),
-             });
+         const response = await fetch(url, {
+           method: 'POST',
+           headers: { 'Content-Type': 'application/json' },
+           body: JSON.stringify({ userID, password }),
+         });
 
-            const data = await response.json();
-            if(response.ok) {
-                 navigate("/Admin");
-            }  else {
-                 setValid(data.success);
-            }
-         }
-         else if(role==="Student") {
-             const response = await fetch("/Student", {
-             method: 'POST',
-             headers: { 'Content-Type': 'application/json' },
-             body: JSON.stringify({ userID, password })
-             });
+         const data = await response.json();
 
-             const data = await response.json();
-              if(response.ok) {
-                navigate("/Student");
-            }  else {
-                setValid(data.success);
-            }
-         }
-         else {
-             const response = await fetch("/Teacher", {
-             method: 'POST',
-             headers: { 'Content-Type': 'application/json' },
-             body: JSON.stringify({ userID, password })
-             });
-
-             const data = await response.json();
-              if(response.ok) {
-                 navigate("/Teacher");
-            }  else {
-                 setValid(data.success);
-            }
+         if(response.ok) {
+            login(data);
+            navigate(targetPath);
+         } else {
+            setValid(data.success);
          }
       } catch (err) {
+         setValid(false);
          console.error(err);
       }
    }

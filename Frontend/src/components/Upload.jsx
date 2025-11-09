@@ -1,7 +1,9 @@
 import '../pages/styles/upload.css';
 import {useState} from 'react';
+import { useAuth } from '../context/AuthContext.jsx';
 
 function Upload({uploadContent,change,uploadTask}) {
+    const {auth} = useAuth();
     const [file,setFile]=useState(null);
     const [loading,setLoading]=useState(false);
     const [error,setError]=useState('');
@@ -19,84 +21,42 @@ function Upload({uploadContent,change,uploadTask}) {
        }
        
        setLoading(true);
-       const formData= new FormData();
-       if(uploadTask==="createStudent") {
-            formData.append('create_student',file);
-            try {
-               const response = await fetch('http://localhost:5000/create_student_account',{
-               method:'POST',
-               body:formData,
-            });
+       const formData = new FormData();
+       let url = '';
+       let fieldName = '';
 
+        if(uploadTask==="createStudent") {
+            url = 'http://localhost:5000/create_student_account';
+            fieldName = 'create_student';
+        } else if(uploadTask==="createTeacher") {
+            url = 'http://localhost:5000/create_teacher_account';
+            fieldName = 'create_teacher';
+        } else if(uploadTask==="createCourses") {
+           url = 'http://localhost:5000/create_courses';
+           fieldName = 'create_course';
+        } else if(uploadTask==="assignCourses") {
+           url = 'http://localhost:5000/assign_courses';
+           fieldName = 'assign_course';
+        }
+        formData.append(fieldName, file);
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${auth.token}`,
+                },
+                body: formData,
+            });
             const data = await response.json();
-          
-            setMessage(data.message);
-            }
-            catch(err) {
-              setError("Error: ",data.message);
-            }
-           finally {
-              setLoading(false);
-            }
+             setMessage(data.message);
+        }   
+       catch(err) {
+         setError("Error: ",data.message);
        }
-       else if(uploadTask==="createTeacher") {
-            formData.append('create_teacher',file);
-            try {
-               const response = await fetch('http://localhost:5000/create_teacher_account',{
-               method:'POST',
-               body:formData,
-            });
-
-            const data = await response.json();
-          
-            setMessage(data.message);
-            }
-            catch(err) {
-              setError("Error: ",data.message);
-            }
-           finally {
-              setLoading(false);
-            }
-       }
-       else if(uploadTask==="createCourses") {
-            formData.append('create_course',file);
-            try {
-               const response = await fetch('http://localhost:5000/create_courses',{
-               method:'POST',
-               body:formData,
-            });
-
-            const data = await response.json();
-          
-            setMessage(data.message);
-            }
-            catch(err) {
-              setError("Error: ",data.message);
-            }
-           finally {
-              setLoading(false);
-            }
-       }  
-       else if(uploadTask==="assignCourses") {
-            formData.append('assign_course',file);
-            try {
-               const response = await fetch('http://localhost:5000/assign_courses',{
-               method:'POST',
-               body:formData,
-            });
-
-            const data = await response.json();
-          
-            setMessage(data.message);
-            }
-            catch(err) {
-              setError("Error: ",data.message);
-            }
-           finally {
-              setLoading(false);
-            }
-       }  
-    } 
+       finally {
+         setLoading(false);
+         }
+      }  
     return ( 
        <>
         <form className="upload-form" onSubmit={handleSubmit}>
