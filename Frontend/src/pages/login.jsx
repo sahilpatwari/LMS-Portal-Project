@@ -1,51 +1,46 @@
-import {useState} from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './styles/login.css'; 
+import './styles/login.css'; //
 import { useAuth } from '../context/AuthContext.jsx';
 
-function Login({role}) {
-   const [userID,setUserID]=useState('');
-   const [password,setPassword]=useState('');
-   const [valid,setValid]=useState(true);
+function Login({ role }) {
+   const [userID, setUserID] = useState('');
+   const [password, setPassword] = useState('');
+   const [valid, setValid] = useState(true);
    const navigate = useNavigate();
-   const { login } = useAuth();
+   const { login } = useAuth(); // Get the login function from context
 
    async function handleSubmit(event) {
        event.preventDefault();
+       setValid(true); // Reset validation
        
-       let url = '';
-       let targetPath = '';
-       if (role === "Admin") {
-         url = "http://localhost:5000/Admin";
-         targetPath = "/Admin";
-       } else if (role === "Student") {
-         url = "http://localhost:5000/Student";
-         targetPath = "/Student";
-       } else {
-         url = "http://localhost:5000/Teacher";
-         targetPath = "/Teacher";
-       }
+       // --- REFACTORED: Use one login endpoint ---
+       const url = "http://localhost:5000/auth/login";
+       let targetPath = `/${role}`; // Path to navigate to on success
 
-      try {
+       try {
          const response = await fetch(url, {
            method: 'POST',
            headers: { 'Content-Type': 'application/json' },
-           body: JSON.stringify({ userID, password }),
+           // --- REFACTORED: Send role in the body ---
+           body: JSON.stringify({ userID, password, role }), 
+           credentials: 'include', // Allow cookies(Refresh Token)!! IMPORTANT !!
          });
 
          const data = await response.json();
 
-         if(response.ok) {
-            login(data);
-            navigate(targetPath);
+         if (response.ok) {
+            login(data); // Save token and user to context
+            navigate(targetPath); // Navigate to the correct portal
          } else {
-            setValid(data.success);
+            setValid(false); // Show "Invalid Credentials"
          }
-      } catch (err) {
+       } catch (err) {
          setValid(false);
          console.error(err);
-      }
+       }
    }
+    
     return(
       <div className="login-page-body">
         <div className="login-form-container">
