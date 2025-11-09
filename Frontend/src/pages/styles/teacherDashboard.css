@@ -1,0 +1,63 @@
+/* Add this to your frontend styles */
+.portal-content {
+    position: relative;
+    left: 280px; /* To avoid sidebar */
+    width: calc(100% - 300px);
+    padding: 20px;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.dashboard-widget {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.dashboard-widget h3 {
+    margin-top: 0;
+    color: #4361ee;
+}
+
+.dashboard-widget ul {
+    padding-left: 20px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.dashboard-widget li {
+    padding-bottom: 8px;
+    color: #333;
+}
+
+/* Re-use your existing upload-section for layout */
+.upload-section {
+    display: flex;
+    justify-content: center;
+    gap: 0; /* Let the form define its own width */
+}
+
+/* Tweak upload form for this context */
+.upload-form {
+    width: 100%;
+    max-width: 600px;
+    top: 0; /* Reset position */
+}
+
+.upload-form select {
+    width: 96%; /* Match your inputs */
+    height: 44px;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 16px;
+    color: #212529;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+}

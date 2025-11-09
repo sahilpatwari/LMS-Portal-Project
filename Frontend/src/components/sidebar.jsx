@@ -81,36 +81,42 @@ function SideBar({role}) {
        </aside>
          );
       }
-      else {
+        else {
          return(
-             <aside class="sidebar">
-          <div class="sidebar-header">
-              <h3>{role} Portal</h3>
+           <aside className="sidebar">
+            <div className="sidebar-header">
+                <h3>{role} Portal</h3>
+            </div>
+            <div className="divider"></div>
+            <div className="sidebar-menu">
+            <ul>
+              <li>
+                <Link to="/Teacher/courseDetails">
+                  <i className="bx bx-book-alt"></i>
+                  <span>Course Details</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/Teacher/studentDetails">
+                  <i className="bx bx-user"></i>
+                  <span>Student Details</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/Teacher/uploadMaterials">
+                  <i className="bx bx-upload"></i>
+                  <span>Upload Materials</span>
+                </Link>
+              </li>
+              <li>
+                <a href="/" onClick={handleLogout}>
+                  <i className="bx bx-log-out"></i>
+                  <span>Logout</span>
+                </a>
+              </li>
+            </ul>
           </div>
-          <div class="divider"></div>
-          <div class="sidebar-menu">
-          <ul>
-            <li>
-              <Link to="/upload_materials" class="active">
-                <i class="bx bx-user"></i>
-                <span>Upload Materials</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/teacher_courses">
-                <i class="bx bx-book-alt"></i>
-                <span>Courses</span>
-              </Link>
-            </li>
-           <li>
-              <a href="/" onClick={handleLogout}>
-                <i class="bx bx-log-out"></i>
-                <span>Logout</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-       </aside>
+         </aside>
          );
       }
     }

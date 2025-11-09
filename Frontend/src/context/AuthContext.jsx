@@ -1,9 +1,8 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  // Get initial state from localStorage
   const [auth, setAuth] = useState(() => {
     const token = localStorage.getItem('accessToken');
     const user = localStorage.getItem('user');
@@ -13,32 +12,23 @@ export const AuthProvider = ({ children }) => {
     return { token: null, user: null };
   });
 
-  /**
-   * Updates auth state. Can be called with full login data
-   * or just a partial { accessToken } on refresh.
-   */
-  const login = (data) => {
-    // data = { accessToken, user } from login
-    // OR data = { accessToken, user } from refresh
-    
-    // Persist the new token
+  // Wrap login in useCallback
+  const login = useCallback((data) => {
     localStorage.setItem('accessToken', data.accessToken);
-    
-    // Persist the user data ONLY if it's provided (on initial login/refresh)
     if (data.user) {
       localStorage.setItem('user', JSON.stringify(data.user));
     }
     
-    // Set the new state
     setAuth(prevAuth => ({
       token: data.accessToken,
-      user: data.user || prevAuth.user, // Keep old user data if new isn't provided
+      user: data.user || prevAuth.user, 
     }));
-  };
+  }, []); // No dependencies, this function is stable
 
-  const logout = async () => {
+  // Wrap logout in useCallback
+  const logout = useCallback(async () => {
     try {
-      await fetch('http://localhost:5000/auth/logout', {
+      await fetch('http://localhost:5000/api/auth/logout', {
         method: 'POST',
         credentials: 'include', 
       });
@@ -49,7 +39,7 @@ export const AuthProvider = ({ children }) => {
     setAuth({ token: null, user: null });
     localStorage.removeItem('accessToken');
     localStorage.removeItem('user');
-  };
+  }, []); // No dependencies, this function is stable
 
   return (
     <AuthContext.Provider value={{ auth, login, logout }}>

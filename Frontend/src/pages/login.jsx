@@ -15,7 +15,7 @@ function Login({ role }) {
        setValid(true); // Reset validation
        
        // --- REFACTORED: Use one login endpoint ---
-       const url = "http://localhost:5000/auth/login";
+       const url = "http://localhost:5000/api/auth/login";
        let targetPath = `/${role}`; // Path to navigate to on success
 
        try {

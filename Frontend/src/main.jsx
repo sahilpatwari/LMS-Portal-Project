@@ -14,6 +14,10 @@ import Add from './pages/Admin/Add.jsx';
 import Update from './pages/Admin/Update.jsx';
 import Delete from './pages/Admin/Delete.jsx';
 
+import UploadMaterials from './pages/Teacher/UploadMaterials.jsx';
+import CourseDetails from './pages/Teacher/CourseDetails.jsx';
+import StudentDetails from './pages/Teacher/StudentDetails.jsx';
+
 let admin=import.meta.env.VITE_ADMIN_ROUTE_PATH;
 
 const router=createBrowserRouter([
@@ -33,9 +37,27 @@ const router=createBrowserRouter([
       path:'/teacherLogin',
       element:<Login role="Teacher" />
     },
-    {
+   {
       path:'/Teacher',
-      element:<Portal role="Teacher" />
+      element:<Portal role="Teacher" />,
+      children: [
+        {
+          index: true, // Default route for /Teacher
+          element: <CourseDetails /> // Or a new TeacherDashboard.jsx
+        },
+        {
+          path: 'uploadMaterials',
+          element: <UploadMaterials />
+        },
+        {
+          path: 'courseDetails',
+          element: <CourseDetails />
+        },
+        {
+          path: 'studentDetails',
+          element: <StudentDetails />
+        }
+      ]
     },
     {
       path:admin,

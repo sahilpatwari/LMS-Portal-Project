@@ -1,0 +1,103 @@
+.uploadForm {
+  display: flex;
+  flex-direction: column; /* Ensure it's a column */
+  background-color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 467px;
+  border-radius: 8px;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.title {
+  text-align: center;
+  color: #333333;
+  font-size: 28px;
+  margin: 0 0 20px 0;
+}
+
+/* --- New Custom File Input --- */
+.fileUploadLabel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 20px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #4361ee;
+  background-color: #f5f7fb;
+  border: 2px dashed #4361ee;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+.fileUploadLabel i {
+  margin-right: 10px;
+  font-size: 1.3rem;
+}
+
+.fileUploadLabel:hover {
+  background-color: #e3f2fd;
+  border-color: #3f37c9;
+}
+
+.fileUploadInput {
+  display: none; /* This hides the ugly default input */
+}
+
+/* This will show the name of the selected file */
+.fileNames {
+  display: block;
+  width: 100%;
+  font-style: italic;
+  color: #666;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  text-align: center;
+  min-height: 1.2em; /* Prevents layout shift */
+  word-break: break-all;
+}
+
+.submitButton {
+  width: 100%;
+  align-self: center;
+  margin-bottom: 20px;
+  padding: 12px;
+  font-size: 16px;
+  /* Inherits global button styles, can be customized */
+}
+
+.submitButton:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+}
+
+.description {
+  text-align: center;
+  margin-top: 0;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* --- Feedback Messages --- */
+.message,
+.error {
+  text-align: center;
+  font-weight: 500;
+  margin: -10px 0 15px 0;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 0.9rem;
+}
+.message {
+  color: #00796b;
+  background-color: #e6fffa;
+}
+.error {
+  color: #d32f2f;
+  background-color: #ffebee;
+}

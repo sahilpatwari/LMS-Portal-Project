@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useCallback } from 'react'; // 1. Import useCallback
 
 /**
  * This is a custom hook that returns a 'fetch' function.
@@ -10,31 +11,32 @@ export const useAuthFetch = () => {
   const { auth, login, logout } = useAuth();
   const navigate = useNavigate();
 
-  const authFetch = async (url, options) => {
+  // 2. Wrap the entire authFetch function in useCallback
+  const authFetch = useCallback(async (url, options={}) => {
     
-    // 1. A helper function to make the actual request
+    // Helper function to make the actual request
     const makeRequest = async (token) => {
-      const headers = { ...options.headers };
+      const headers = { ...(options.headers || {}) }; // Ensure headers is an object
       if (token) {
         headers['Authorization'] = `Bearer ${token}`;
       }
       
-      // Do NOT set 'Content-Type': 'application/json'.
+      // Do NOT set 'Content-Type': 'application/json' here.
       // 'fetch' handles 'multipart/form-data' automatically
       // and sets its own boundary.
       
       return await fetch(url, { ...options, headers });
     };
 
-    // 2. Make the initial request with the current token
+    // 3. Make the initial request with the current token
     let response = await makeRequest(auth.token);
 
-    // 3. Check for 401 (Token Expired)
+    // 4. Check for 401 (Token Expired)
     if (response.status === 401) {
       console.log('Access token expired. Attempting refresh...');
       try {
-        // 4. Attempt to get a new token from the /refresh endpoint
-        const refreshResponse = await fetch('http://localhost:5000/auth/refresh', {
+        // 5. Attempt to get a new token from the /refresh endpoint
+        const refreshResponse = await fetch('http://localhost:5000/api/auth/refresh', {
           method: 'POST',
           credentials: 'include', // This is crucial for sending the HttpOnly cookie
         });
@@ -42,31 +44,32 @@ export const useAuthFetch = () => {
         const data = await refreshResponse.json();
 
         if (!refreshResponse.ok) {
-          // If the refresh token is also bad, log the user out
           throw new Error(data.message || 'Refresh token failed');
         }
 
-        // 5. Success! Update the auth state with the new token
+        // 6. Success! Update the auth state with the new token
         login(data); // data = { accessToken, user }
         console.log('Token refreshed successfully.');
 
-        // 6. Retry the original request with the new token
+        // 7. Retry the original request with the NEW token
         response = await makeRequest(data.accessToken);
         
       } catch (err) {
-        // 7. Refresh failed (e.g., refresh token expired), log the user out
+        // 8. Refresh failed, log the user out
         console.error('Session expired. Logging out.', err);
         logout(); // This will clear context and localStorage
-        navigate('/'); 
+        navigate('/studentLogin'); // Send to a login page
         
-        // Throw an error to stop the original component's logic
         throw new Error('Your session has expired. Please log in again.');
       }
     }
     
-    // 8. Return the final response (either from step 2 or step 6)
+    // 9. Return the final response
     return response;
-  };
+    
+  // 10. Add dependencies for useCallback
+  }, [auth.token, login, logout, navigate]); 
 
+  // 11. Return the memoized function
   return authFetch;
 };

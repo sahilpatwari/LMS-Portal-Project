@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser';
 
 // --- Our Refactored Services & Routes ---
 import authRoutes from './routes/authRoutes.js';
+import teacherRoutes from './routes/teacherRoutes.js';
 import { processCsvOperation, configs } from './Services/csvProcessor.js';
 import { authMiddleware, verifyAdmin } from './middlewares/authMiddleware.js';
 
@@ -50,7 +51,7 @@ const uploadCSV = multer({
 
 // --- Auth Routes ---
 // All login/logout/refresh logic is now handled here, prefixed with /auth
-app.use('/auth', authRoutes);
+app.use('/api/auth', authRoutes);
 
 // --- Generic CSV Upload Handler ---
 const handleUpload = (processFunction, config) => async (req, res) => {
@@ -97,8 +98,8 @@ adminCsvRoutes.post("/delete_teacher", uploadCSV.single("delete_teacher"), handl
 adminCsvRoutes.post("/delete_courses", uploadCSV.single("delete_courses"), handleUpload(processCsvOperation, configs.delete.courses));
 
 // Mount the admin CSV routes
-app.use('/', adminCsvRoutes);
-
+app.use('/api/admin', adminCsvRoutes);
+app.use('/api/teachers', teacherRoutes);
 
 
 app.listen(port, () => {

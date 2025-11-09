@@ -1,0 +1,178 @@
+/* This file is for all new Teacher components */
+.portalContent {
+  position: relative;
+  left: 280px; /* To avoid sidebar */
+  width: calc(100% - 300px);
+  padding: 20px;
+  color: #212529; /* Light mode text */
+}
+
+.pageHeader {
+  color: #4361ee;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+/* --- Search Forms --- */
+.searchContainer {
+  display: flex;
+  gap: 15px;
+  align-items: flex-end;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.searchGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.searchGroup label {
+  font-weight: 500;
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.searchInput {
+  width: 250px;
+  height: 20px;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+}
+
+.searchButton {
+  height: 44px; /* Match input */
+  align-self: flex-end;
+}
+
+/* --- Table --- */
+.resultsTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.resultsTable th,
+.resultsTable td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.resultsTable th {
+  background-color: #4361ee;
+  font-weight: 600;
+  color:white;
+}
+
+.resultsTable tr:last-child td {
+  border-bottom: none;
+}
+
+.resultsTable tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* --- Upload Form --- */
+.uploadForm {
+  background: #fff;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  max-width: 700px;
+  color: #212529;
+}
+
+.uploadForm select,
+.uploadForm input[type="file"] {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-sizing: border-box; /* Important */
+}
+
+/* --- Upload Feedback --- */
+.feedbackList {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+.feedbackItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.statusSuccess {
+  background-color: #e6fffa;
+  color: #00796b;
+}
+
+.statusError {
+  background-color: #ffebee;
+  color: #d32f2f;
+}
+
+.statusUploading {
+  background-color: #e3f2fd;
+  color: #0d47a1;
+}
+.fileUploadLabel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 20px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #4361ee;
+  background-color: #f5f7fb;
+  border: 2px dashed #4361ee;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 15px;
+  box-sizing: border-box; /* Ensures padding is included in width */
+}
+
+.fileUploadLabel i {
+  margin-right: 10px;
+  font-size: 1.3rem;
+}
+
+.fileUploadLabel:hover {
+  background-color: #e3f2fd;
+  border-color: #3f37c9;
+}
+
+/* This is the *real* file input, which we now hide */
+.fileUploadInput {
+  display: none;
+}
+
+/* This will display the names of the selected files */
+.fileNames {
+  display: block;
+  width: 100%;
+  font-style: italic;
+  color: #666;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  text-align: center;
+}
