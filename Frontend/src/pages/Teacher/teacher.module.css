@@ -176,3 +176,38 @@
   font-size: 0.9rem;
   text-align: center;
 }
+.actionButtons {
+  display: flex;
+  gap: 10px;
+}
+
+.viewButton,
+.downloadButton {
+  display: inline-block;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 5px;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.viewButton {
+  background-color: #f5f7fb;
+  color: #4361ee;
+  border: 1px solid #4361ee;
+}
+.viewButton:hover {
+  background-color: #e3f2fd;
+}
+
+.downloadButton {
+  background-color: #4361ee;
+  color: white;
+  border: 1px solid #4361ee;
+}
+.downloadButton:hover {
+  background-color: #3f37c9;
+}

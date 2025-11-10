@@ -59,23 +59,29 @@ function SideBar({role}) {
           <div class="sidebar-menu">
           <ul>
             <li>
-              <Link to="/study_materials" class="active">
-                <i class="bx bx-user"></i>
-                <span>Study Materials</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/courses">
-                <i class="bx bx-book-alt"></i>
-                <span>Courses</span>
-              </Link>
-            </li>
-           <li>
-              <a href="/" onClick={handleLogout}>
-                <i class="bx bx-log-out"></i>
-                <span>Logout</span>
-              </a>
-            </li>
+                <Link to="/Student/materials">
+                  <i className="bx bx-book-open"></i>
+                  <span>Study Materials</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/Student/courses">
+                  <i className="bx bx-book-alt"></i>
+                  <span>My Courses</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/Student/teachers">
+                  <i className="bx bx-user"></i>
+                  <span>My Teachers</span>
+                </Link>
+              </li>
+              <li>
+                <a href="/" onClick={handleLogout}>
+                  <i className="bx bx-log-out"></i>
+                  <span>Logout</span>
+                </a>
+              </li>
           </ul>
         </div>
        </aside>

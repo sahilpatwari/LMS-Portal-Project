@@ -162,7 +162,6 @@ export const refresh = async (req, res) => {
  */
 export const logout = async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
-  console.log(req.cookies.refreshToken);
   if (!refreshToken) {
     return res.status(204).send(); // Already logged out
   }

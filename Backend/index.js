@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser';
 
 // --- Our Refactored Services & Routes ---
 import authRoutes from './routes/authRoutes.js';
+import studentRoutes from './routes/studentRoutes.js';
 import teacherRoutes from './routes/teacherRoutes.js';
 import { processCsvOperation, configs } from './Services/csvProcessor.js';
 import { authMiddleware, verifyAdmin } from './middlewares/authMiddleware.js';
@@ -99,6 +100,7 @@ adminCsvRoutes.post("/delete_courses", uploadCSV.single("delete_courses"), handl
 
 // Mount the admin CSV routes
 app.use('/api/admin', adminCsvRoutes);
+app.use('/api/students', studentRoutes);
 app.use('/api/teachers', teacherRoutes);
 
 

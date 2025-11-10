@@ -10,9 +10,14 @@ import { AuthProvider } from './context/AuthContext.jsx';
 import Homepage from './pages/homepage.jsx';
 import Login from './pages/login.jsx';
 import Portal from './pages/portal.jsx';
+
 import Add from './pages/Admin/Add.jsx';
 import Update from './pages/Admin/Update.jsx';
 import Delete from './pages/Admin/Delete.jsx';
+
+import ViewMaterials from './pages/Student/ViewMaterials.jsx';
+import StudentCourseDetails from './pages/Student/StudentCourseDetails.jsx';
+import StudentTeacherDetails from './pages/Student/StudentTeacherDetails.jsx';
 
 import UploadMaterials from './pages/Teacher/UploadMaterials.jsx';
 import CourseDetails from './pages/Teacher/CourseDetails.jsx';
@@ -31,7 +36,25 @@ const router=createBrowserRouter([
     },
     {
       path:'/Student',
-      element:<Portal role="Student" />
+      element:<Portal role="Student" />,
+      children: [
+        {
+          index: true, // Default route for /Student
+          element: <ViewMaterials />
+        },
+        {
+          path: 'materials',
+          element: <ViewMaterials />
+        },
+        {
+          path: 'courses',
+          element: <StudentCourseDetails />
+        },
+        {
+          path: 'teachers',
+          element: <StudentTeacherDetails />
+        }
+      ]
     },
     {
       path:'/teacherLogin',

@@ -1,0 +1,85 @@
+/*
+* File: login.module.css
+* Converted from login.css to prevent style conflicts
+*/
+
+.loginPageBody {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+}
+
+.loginFormContainer {
+  background: white;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 400px;
+  padding: 32px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  height: 80vh;
+  position: relative;
+  top: 5%;
+}
+
+/* Was .login-form-container h1 */
+.title {
+  font-size: 36px;
+  margin: 10px;
+  color: #4361ee;
+}
+
+/* Was .login-form-container p */
+.subtitle {
+  color: #666;
+  margin: 10px 0px 20px 0px;
+}
+
+/* Was form */
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  gap: 20px;
+  position: relative;
+  top: 10px;
+}
+
+/* Was form h3 */
+.inputLabel {
+  margin: 0px 0px 2px;
+  color: #666;
+  font-size: 20px;
+}
+
+/* Was form input */
+.inputField {
+  width: 90%;
+  height: 20px;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 16px;
+  color: #212529;
+  background-color: #fff;
+  border: 1px solid #ddd;
+}
+
+/* Was form input:focus */
+.inputField:focus {
+  border-color: #4361ee;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+}
+
+/* Was form button */
+.submitButton {
+  width: 96%;
+  height: 44px;
+  margin: 10px 0px;
+  /* Inherits button styles from index.css */
+}
+
+/* Was .login-form-container .invalid */
+.invalid {
+  color: #DC484A;
+  font-size: 20px;
+}

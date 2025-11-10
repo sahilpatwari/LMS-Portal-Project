@@ -1,7 +1,6 @@
 import express from 'express';
 import db from '../Database/db.js';
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { getPresignedUploadUrl } from '../Services/s3Service.js';
 import { authMiddleware, verifyTeacher } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
@@ -141,13 +140,6 @@ router.get('/my-courses-list', async (req, res) => {
 
 // --- 2. S3 Pre-signed URL Routes ---
 
-const s3Client = new S3Client({
-  region: process.env.AWS_BUCKET_REGION,
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  }
-});
 
 /**
  * @route   POST /api/teachers/generate-upload-urls
@@ -171,14 +163,8 @@ router.post('/generate-upload-urls', authMiddleware, verifyTeacher, async (req, 
 
   for (const file of files) {
     const s3Key = `materials/${courseId}/${teacherId}/${Date.now()}-${file.fileName}`;
-    const command = new PutObjectCommand({
-      Bucket: process.env.AWS_BUCKET_NAME,
-      Key: s3Key,
-      ContentType: file.fileType,
-    });
-
     try {
-      const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 300 });
+      const signedUrl = await getPresignedUploadUrl(s3Key, file.fileType);
       generatedUrls.push({
         fileName: file.fileName,
         signedUrl: signedUrl,
