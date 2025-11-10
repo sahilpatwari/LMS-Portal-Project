@@ -7,13 +7,14 @@ function Login({ role }) {
    const [userID, setUserID] = useState('');
    const [password, setPassword] = useState('');
    const [valid, setValid] = useState(true);
+   const [loading, setLoading] = useState(false);
    const navigate = useNavigate();
    const { login } = useAuth(); // Get the login function from context
 
    async function handleSubmit(event) {
        event.preventDefault();
        setValid(true); // Reset validation
-       
+       setLoading(true);
        // --- REFACTORED: Use one login endpoint ---
        const url = "http://localhost:5000/api/auth/login";
        let targetPath = `/${role}`; // Path to navigate to on success
@@ -34,9 +35,11 @@ function Login({ role }) {
             navigate(targetPath); // Navigate to the correct portal
          } else {
             setValid(false); // Show "Invalid Credentials"
+            setLoading(false);
          }
        } catch (err) {
          setValid(false);
+         setLoading(false);
          console.error(err);
        }
    }
@@ -57,7 +60,9 @@ function Login({ role }) {
                <input placeholder="Enter your Password" type="password" value={password} onChange={(e)=> setPassword(e.target.value)}></input>
                <span>Forgot Password?</span>
             </div>
-            <button type="submit">Login</button>
+            <button type="submit" disabled={loading}>
+               {loading ? 'Logging in' : 'Login' }
+            </button>
          </form>
       </div>
       </div>

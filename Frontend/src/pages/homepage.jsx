@@ -13,7 +13,7 @@ function Homepage() {
               <i className="bx bx-user"></i>
             </div>
            <h3>Student Portal</h3>
-           <p>Access relevant up-to-date study materials and attend quizes</p>
+           <p>Access relevant up-to-date study materials to further your learning</p>
            <Link to="/studentLogin">Student Login</Link>
          </div>
           <div className="login-card">
@@ -23,6 +23,14 @@ function Homepage() {
            <h3>Teacher Portal</h3>
            <p>Monitor and help students in their learning journey</p>
            <Link to="/teacherLogin">Teacher Login</Link>
+         </div>
+         <div className="login-card">
+            <div className="login-card-icon">
+              <i className="bx bx-user icon"></i>
+            </div>
+           <h3>Admin Portal</h3>
+           <p>Monitor the web application to make it secure and accessible to all users.</p>
+           <Link to="/adminLogin">Admin Login</Link>
          </div>
        </div>
        </>

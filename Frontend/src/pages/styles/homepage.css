@@ -21,6 +21,7 @@
 }
 .login-options {
     display:flex;
+    flex-wrap:wrap;
     justify-content:center;
     align-items:center;
     gap:30px;
@@ -33,7 +34,7 @@
     background:white;
     border-radius:10px;
     padding:32px;
-    width:438px;
+    width:400px;
     height:284px;
     box-shadow:0 4px 6px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
@@ -63,13 +64,14 @@
 .login-card p {
     font-size:18px;
     color:#666;
+    margin:10px;
 }
 .login-card a {
     display:block;
     width:170px;
     margin:0px 10px;
     position:relative;
-    left:25%;
+    left:22%;
     color:white;
     border-radius: 8px;
     border: 1px solid transparent;
@@ -84,33 +86,51 @@
 .login-card a:hover{
   background-color:#3f37c9;
 }
-@media (min-width:1920px) {
-    #heading h1 {
-        font-size:66px;
-    }
-    #heading p {
-        font-size:36px;
-    }
+@media (min-width: 1920px) {
+  #heading h1 {
+    font-size: 66px;
+  }
+  #heading p {
+    font-size: 36px;
+  }
 }
-@media (min-width:1440px) {
-    #heading h1  {
-        font-size:56px;
-    }
+
+@media (min-width: 1440px) {
+  #heading h1 {
+    font-size: 56px;
+  }
 }
-@media (max-width:768px) {
-    #heading h1  {
-        font-size:36px;
-    }
-    #heading p {
-       font-size:18px;
-    }
-    .login-options {
-       flex-direction:column;
-    }
+
+/* For Tablets */
+@media (max-width: 768px) {
+  #heading h1 {
+    font-size: 36px;
+  }
+  #heading p {
+    font-size: 18px;
+    width: 90%; 
+  }
+  .login-options {
+    flex-direction: column;
+    top: -2em; 
+  }
+  .login-card {
+    width: 80%; 
+    height: auto; 
+  }
 }
-@media (max-width:480px) {
-    .login-card {
-        width:92%;
-        padding:10px;
-    }
+
+/* For Phones */
+@media (max-width: 480px) {
+  #heading {
+    padding-bottom: 4em; 
+  }
+  .login-card {
+    width: 92%; 
+    padding: 20px;
+  }
+  .login-card a {
+    left: 0;
+    margin: 0 auto;
+  }
 }
