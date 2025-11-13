@@ -23,7 +23,7 @@ import UploadMaterials from './pages/Teacher/UploadMaterials.jsx';
 import CourseDetails from './pages/Teacher/CourseDetails.jsx';
 import StudentDetails from './pages/Teacher/StudentDetails.jsx';
 
-
+import AdminTemplates from './pages/Admin/Templates.jsx';
 
 const router=createBrowserRouter([
     {
@@ -91,6 +91,10 @@ const router=createBrowserRouter([
       element:<Portal role="Admin" />,
 
       children: [
+         {
+          index: true,
+          element: <AdminTemplates />
+        },
         {
           path: 'add',
           element: <Add />
@@ -102,6 +106,10 @@ const router=createBrowserRouter([
         {
           path: 'delete',
           element: <Delete />
+        },
+        {
+          path: 'templates',
+          element: <AdminTemplates />
         },
       ],
     }

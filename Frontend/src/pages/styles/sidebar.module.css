@@ -1,0 +1,61 @@
+.sidebar {
+  width: 250px;
+  background-color: #212529;
+  color: white;
+  position: fixed;
+  top: 0;
+  height: 100vh;
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.sidebarHeader {
+  padding: 2rem 1.5rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebarHeader h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #4cc9f0;
+}
+
+/* This was .divider in the original file, I'm assuming you'll add it */
+.divider { 
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebarMenu {
+  padding: 1rem 0;
+}
+
+.sidebarMenu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebarMenu li {
+  margin-bottom: 0.5rem;
+}
+
+.sidebarMenu a {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  transition: all 0.3s; /* Changed from var(--transition) */
+}
+
+.sidebarMenu a:hover,
+.sidebarMenu a.active {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.sidebarMenu i {
+  margin-right: 1rem;
+  font-size: 1.25rem;
+}

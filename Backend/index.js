@@ -50,6 +50,7 @@ const uploadCSV = multer({
   },
 });
 
+
 // --- Auth Routes ---
 // All login/logout/refresh logic is now handled here, prefixed with /auth
 app.use('/api/auth', authRoutes);
@@ -103,6 +104,33 @@ app.use('/api/admin', adminCsvRoutes);
 app.use('/api/students', studentRoutes);
 app.use('/api/teachers', teacherRoutes);
 
+const templateRoutes = express.Router();
+templateRoutes.use(authMiddleware, verifyAdmin); 
+
+const templates = [
+  'create_student_template.csv',
+  'create_teacher_template.csv',
+  'create_course_template.csv',
+  'assign_courses_template.csv',
+  'update_template.csv',
+  'delete_template.csv'
+];
+
+templates.forEach(template => {
+  templateRoutes.get(`/templates/${template}`, (req, res) => {
+    const filePath = path.join(__dirname, 'public', 'templates', template);
+
+    res.download(filePath, (err) => {
+      if (err) {
+        console.error("Error sending template file:", err);
+        res.status(404).json({ message: "Template not found." });
+      }
+    });
+  });
+});
+
+// Mount the new router
+app.use('/api', templateRoutes); 
 
 app.listen(port, () => {
   console.log("Server running on port ", port);

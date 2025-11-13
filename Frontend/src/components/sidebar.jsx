@@ -1,64 +1,73 @@
-import '../pages/styles/sidebar.css';
-import {Link,useNavigate} from 'react-router-dom';
-import { useAuth } from '../context/AuthContext.jsx';
-function SideBar({role}) {
-    const { logout } = useAuth();
-    const navigate = useNavigate();
+// 1. Change the CSS import
+import styles from '../pages/styles/sidebar.module.css';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext'; // Assuming you have this
 
-    const handleLogout = async (e) => {
-      e.preventDefault();
-      await logout();
-      navigate('/'); // Navigate to homepage after logout
-    };
-    function Role() {
-      if(role==="Admin") {
-          return (
-          <aside className="sidebar">
-          <div className="sidebar-header">
-              <h3>{role} Portal</h3>
+function SideBar({ role }) {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    await logout();
+    navigate('/');
+  };
+
+  function Role() {
+    if (role === "Admin") {
+      return (
+        // 2. Update all 'className' props to use the 'styles' object
+        <aside className={styles.sidebar}>
+          <div className={styles.sidebarHeader}>
+            <h3>{role} Portal</h3>
           </div>
-          <div className="divider"></div>
-          <div className="sidebar-menu">
-          <ul>
-            <li>
-              <Link to="/Admin/add">
-                <i class="bx bx-user"></i>
-                <span>Add</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/Admin/update">
-                <i class="bx bx-user"></i>
-                <span>Update</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/Admin/delete">
-                <i class="bx bx-user"></i>
-                <span>Delete</span>
-              </Link>
-            </li>
-            <li>
-              <a href="/" onClick={handleLogout}>
-                <i class="bx bx-log-out"></i>
-                <span>Logout</span>
-              </a>
-            </li>
-          </ul>
-         </div>
-         </aside>
-          );
-      }
-      else if(role==="Student") {
-         return(
-             <aside class="sidebar">
-          <div class="sidebar-header">
-              <h3>{role} Portal</h3>
+          <div className={styles.divider}></div>
+          <div className={styles.sidebarMenu}>
+            <ul>
+              <li>
+                <Link to="/Admin/add">
+                  <i className="bx bx-plus-circle"></i>
+                  <span>Add</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/Admin/update">
+                  <i className="bx bx-edit-alt"></i>
+                  <span>Update</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/Admin/delete">
+                  <i className="bx bx-trash"></i>
+                  <span>Delete</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/Admin/templates">
+                  <i className="bx bx-download"></i>
+                  <span>Templates</span>
+                </Link>
+              </li>
+              <li>
+                <a href="/" onClick={handleLogout}>
+                  <i className="bx bx-log-out"></i>
+                  <span>Logout</span>
+                </a>
+              </li>
+            </ul>
           </div>
-          <div class="divider"></div>
-          <div class="sidebar-menu">
-          <ul>
-            <li>
+        </aside>
+      );
+    } else if (role === "Student") {
+      return (
+        <aside className={styles.sidebar}>
+          <div className={styles.sidebarHeader}>
+            <h3>{role} Portal</h3>
+          </div>
+          <div className={styles.divider}></div>
+          <div className={styles.sidebarMenu}>
+            <ul>
+              <li>
                 <Link to="/Student/materials">
                   <i className="bx bx-book-open"></i>
                   <span>Study Materials</span>
@@ -82,19 +91,18 @@ function SideBar({role}) {
                   <span>Logout</span>
                 </a>
               </li>
-          </ul>
-        </div>
-       </aside>
-         );
-      }
-        else {
-         return(
-           <aside className="sidebar">
-            <div className="sidebar-header">
-                <h3>{role} Portal</h3>
-            </div>
-            <div className="divider"></div>
-            <div className="sidebar-menu">
+            </ul>
+          </div>
+        </aside>
+      );
+    } else { // Teacher
+      return (
+        <aside className={styles.sidebar}>
+          <div className={styles.sidebarHeader}>
+            <h3>{role} Portal</h3>
+          </div>
+          <div className={styles.divider}></div>
+          <div className={styles.sidebarMenu}>
             <ul>
               <li>
                 <Link to="/Teacher/courseDetails">
@@ -122,14 +130,14 @@ function SideBar({role}) {
               </li>
             </ul>
           </div>
-         </aside>
-         );
-      }
+        </aside>
+      );
     }
-    return(
-       <>
-        {Role()}
-       </>
-    );
+  }
+  return (
+    <>
+      {Role()}
+    </>
+  );
 }
 export default SideBar;
