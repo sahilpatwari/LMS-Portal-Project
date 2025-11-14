@@ -160,7 +160,7 @@ function UploadMaterials() {
           {fileNames}
         </span>
 
-        <button type="submit" className={styles.searchButton} disabled={isLoading}>
+        <button type="submit" className={styles.uploadButton} disabled={isLoading}>
           {isLoading ? 'Uploading...' : 'Upload Files'}
         </button>
 

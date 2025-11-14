@@ -167,7 +167,7 @@ export const configs = {
         { id: "Semester", title: "Semester" }, { id: "Contact_Details", title: "Contact_Details" },
         { id: "Reason", title: "Reason" },
       ],
-      buildQuery: (row, client) => buildUpdateQuery(row, configs.update.student),
+      buildQuery: (row) => buildUpdateQuery(row, configs.update.student),
       columnMap: {
         'Firstname': 'Student_First_Name',
         'Lastname': 'Student_Last_Name',
@@ -188,7 +188,7 @@ export const configs = {
         { id: "Department_Name", title: "Department_Name" }, { id: "Contact_Details", title: "Contact_Details" },
         { id: "Reason", title: "Reason" },
       ],
-      buildQuery: (row, client) => buildUpdateQuery(row, configs.update.teacher),
+      buildQuery: (row) => buildUpdateQuery(row, configs.update.teacher),
       columnMap: {
         'Firstname': 'Teacher_First_Name',
         'Lastname': 'Teacher_Last_Name',
@@ -207,7 +207,7 @@ export const configs = {
         { id: "Credits", title: "Credits" }, { id: "Department_Name", title: "Department_Name" },
         { id: "Reason", title: "Reason" },
       ],
-      buildQuery: (row, client) => buildUpdateQuery(row, configs.update.courses),
+      buildQuery: (row) => buildUpdateQuery(row, configs.update.courses),
       columnMap: {
         'Coursename': 'Course_Name',
         'Credits': 'Credits',
@@ -225,7 +225,7 @@ export const configs = {
       idColumn: 'Student_ID',
       requiredFields: ['ID'],
       errorHeaders: [{ id: 'ID', title: 'ID' }, { id: 'Reason', title: 'Reason' }],
-      buildQuery: (row, client) => buildDeleteQuery(row, configs.delete.student),
+      buildQuery: (row) => buildDeleteQuery(row, configs.delete.student),
     },
     teacher: {
       operationType: 'Teacher Account Deletion',
@@ -241,7 +241,7 @@ export const configs = {
       idColumn: 'Course_ID',
       requiredFields: ['ID'],
       errorHeaders: [{ id: 'ID', title: 'ID' }, { id: 'Reason', title: 'Reason' }],
-      buildQuery: (row, client) => buildDeleteQuery(row, configs.delete.courses),
+      buildQuery: (row) => buildDeleteQuery(row, configs.delete.courses),
     },
     // ... add course mappings here
   }
@@ -262,7 +262,6 @@ export async function processCsvOperation(filePath, adminEmail, config) {
   console.log(`Starting ${config.operationType} from file: ${filePath}`);
 
   try {
-    await client.query('BEGIN');
     
     const stream = fs.createReadStream(filePath).pipe(csv());
 
@@ -292,12 +291,9 @@ export async function processCsvOperation(filePath, adminEmail, config) {
         errors.push({ ...row, Reason: rowError.message.replace(/error: /g, '') });
       }
     }
-
-    await client.query('COMMIT');
     console.log(`Processing complete for ${filePath}. Success: ${successfulImports}, Failed: ${errors.length}`);
 
   } catch (processingError) {
-    await client.query('ROLLBACK');
     console.error(`Fatal error during ${config.operationType}:`, processingError);
     // Add a single fatal error to the report
     errors.push({ Reason: `Fatal Error: ${processingError.message}. All changes have been rolled back.` });

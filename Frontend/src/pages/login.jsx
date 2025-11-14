@@ -51,7 +51,7 @@ function Login({ role }) {
         <div className={styles.loginFormContainer}>
          <h1 className={styles.title}>{role} Login</h1>
          <p className={styles.subtitle}>Enter your credentials to gain access to your account</p>
-         {!valid && <p className={styles.invalid}>Invalid Credentials. Please re-enter again.</p>}
+         {!valid && <p className={styles.invalid}>Invalid Credentials. Please re-try again.</p>}
          
          <form className={styles.loginForm} onSubmit={handleSubmit}>
             <div>

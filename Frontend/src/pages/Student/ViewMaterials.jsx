@@ -90,7 +90,7 @@ function ViewMaterials() {
           <label htmlFor="course-select">Select a Course</label>
           <select 
             id="course-select"
-            className={styles.searchInput}
+            className={styles.courseSelect}
             value={selectedCourse}
             onChange={(e) => setSelectedCourse(e.target.value)}
           >
