@@ -95,4 +95,36 @@ const sendReport=async (adminEmail,operationType,successfulImports,errors,attach
         }
     };   
 
-export {sendWelcomeEmail,sendReport};
+const sendPasswordResetEmail = async (to, name, resetLink) => {
+  const mailOptions = {
+    from: '"LMS Portal Admin" <noreply@LMSportal.com>',
+    to: to,
+    subject: 'Your Password Reset Request',
+    html: `
+      <div style="font-family: sans-serif; line-height: 1.6;">
+        <h2>Hello ${name},</h2>
+        <p>You requested a password reset for your LMS Portal account.</p>
+        <p>Please click the link below to set a new password. This link is valid for 10 minutes.</p>
+        <p>
+          <a href="${resetLink}" 
+             style="background-color: #007bff; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px;">
+            Reset Your Password
+          </a>
+        </p>
+        <p>If you did not request this, please ignore this email.</p>
+        <br>
+        <p>Thank you,</p>
+        <p>The Portal Administration Team</p>
+      </div>
+    `,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log(`Password reset email sent to ${to}`);
+  } catch (error) {
+    console.error(`Error sending password reset email to ${to}:`, error);
+  }
+};
+
+export {sendWelcomeEmail,sendReport,sendPasswordResetEmail};

@@ -15,6 +15,9 @@ import Add from './pages/Admin/Add.jsx';
 import Update from './pages/Admin/Update.jsx';
 import Delete from './pages/Admin/Delete.jsx';
 
+import ForgotPassword from './pages/ForgotPassword.jsx';
+import ResetPassword from './pages/ResetPassword.jsx';
+
 import ViewMaterials from './pages/Student/ViewMaterials.jsx';
 import StudentCourseDetails from './pages/Student/StudentCourseDetails.jsx';
 import StudentTeacherDetails from './pages/Student/StudentTeacherDetails.jsx';
@@ -29,6 +32,14 @@ const router=createBrowserRouter([
     {
       path:'/',
       element:<Homepage />
+    },
+    {
+      path: '/forgot-password',
+      element: <ForgotPassword />
+    },
+    {
+      path: '/reset-password/:token', // The token is a URL parameter
+      element: <ResetPassword />
     },
     {
       path:'/studentLogin',

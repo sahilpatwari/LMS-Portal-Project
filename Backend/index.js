@@ -10,6 +10,7 @@ import cookieParser from 'cookie-parser';
 import authRoutes from './routes/authRoutes.js';
 import studentRoutes from './routes/studentRoutes.js';
 import teacherRoutes from './routes/teacherRoutes.js';
+import passwordResetRoutes from './routes/passwordResetRoutes.js';
 import { processCsvOperation, configs } from './Services/csvProcessor.js';
 import { authMiddleware, verifyAdmin } from './middlewares/authMiddleware.js';
 
@@ -103,6 +104,7 @@ adminCsvRoutes.post("/delete_courses", uploadCSV.single("delete_courses"), handl
 app.use('/api/admin', adminCsvRoutes);
 app.use('/api/students', studentRoutes);
 app.use('/api/teachers', teacherRoutes);
+app.use('/api/password', passwordResetRoutes);
 
 const templateRoutes = express.Router();
 templateRoutes.use(authMiddleware, verifyAdmin); 

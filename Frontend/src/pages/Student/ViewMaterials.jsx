@@ -6,7 +6,7 @@ import styles from '../Teacher/teacher.module.css'; // Re-using teacher styles
 function ViewMaterials() {
   const [courses, setCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState('');
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(1);
   const [materials, setMaterials] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');

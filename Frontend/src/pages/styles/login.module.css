@@ -82,3 +82,17 @@
   color: #DC484A;
   font-size: 20px;
 }
+
+/* Add to login.module.css */
+.forgotPassword {
+  font-size: 0.9rem;
+  color: #4361ee;
+  text-decoration: none;
+  text-align: right;
+  display: block;
+  margin-top: 8px;
+  width: 96%; /* Match button */
+}
+.forgotPassword:hover {
+  text-decoration: underline;
+}

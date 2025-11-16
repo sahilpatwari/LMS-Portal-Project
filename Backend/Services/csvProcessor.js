@@ -268,10 +268,15 @@ export async function processCsvOperation(filePath, adminEmail, config) {
     for await (const row of stream) {
       try {
         // 1. Validate required fields
+        const missingFields =[];
         for (const field of config.requiredFields) {
           if (!row[field] || row[field].trim() === '') {
-            throw new Error(`Missing required field: ${field}`);
+                missingFields.push(field);
           }
+        }
+
+        if(missingFields.length>0) {
+             throw new Error(`Missing Required Fields: ${missingFields.join(',')}`);
         }
 
         // 2. Build the query

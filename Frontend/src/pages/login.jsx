@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,Link } from 'react-router-dom';
 // 1. Change the CSS import
 import styles from './styles/login.module.css';
 import { useAuth } from '../context/AuthContext'; 
@@ -72,7 +72,9 @@ function Login({ role }) {
                  value={password} 
                  onChange={(e)=> setPassword(e.target.value)}
                />
-               {/* <span>Forgot Password?</span> */}
+               <Link to="/forgot-password" className={styles.forgotPassword}>
+               Forgot Password?
+             </Link>
             </div>
             <button 
               type="submit" 
